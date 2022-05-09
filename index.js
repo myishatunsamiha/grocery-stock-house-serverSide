@@ -43,6 +43,17 @@ async function run() {
             res.send(itemsToDisplay);
         })
 
+
+        // one inventory item page: get api to display data of one particular item
+        app.get('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            console.log(id);
+            const result = await inventoryCollection.findOne(query);
+            res.send(result);
+        })
+
+
         // add item page: inserting a new item in the database
         app.post('/additem', async (req, res) => {
             const newItem = req.body;
@@ -50,6 +61,30 @@ async function run() {
             res.send(result);
         })
 
+
+        // update item quantity on specific inventory item page
+        app.put('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedItem = req.body;
+            console.log(updatedItem);
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    email: updatedItem.email,
+                    name: updatedItem.name,
+                    img: updatedItem.img,
+                    description: updatedItem.description,
+                    price: updatedItem.price,
+                    quantity: updatedItem.quantity,
+                    supplierName: updatedItem.supplierName,
+                    sold: updatedItem.sold,
+                    category: updatedItem.category
+                }
+            };
+            const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
 
         // delete specific item from server 
         app.delete('/inventory/:id', async (req, res) => {
