@@ -43,6 +43,14 @@ async function run() {
             res.send(itemsToDisplay);
         })
 
+        // add item page: inserting a new item in the database
+        app.post('/additem', async (req, res) => {
+            const newItem = req.body;
+            const result = await inventoryCollection.insertOne(newItem);
+            res.send(result);
+        })
+
+
         // delete specific item from server 
         app.delete('/inventory/:id', async (req, res) => {
             const id = req.params.id;
