@@ -25,12 +25,30 @@ async function run() {
 
         console.log('database is connceted');
 
+        // home page: get api to display maximum 6 items
         app.get('/inventoryhome', async (req, res) => {
             const query = {};
             const cursor = inventoryCollection.find(query);
             const maxCount = 6;
-            itemsToDisplay = await cursor.limit(maxCount).toArray();
+            const itemsToDisplay = await cursor.limit(maxCount).toArray();
             res.send(itemsToDisplay);
+        })
+
+
+        // manage inventories page: get api to display all items
+        app.get('/allinventory', async (req, res) => {
+            const query = {};
+            const cursor = inventoryCollection.find(query);
+            const itemsToDisplay = await cursor.toArray();
+            res.send(itemsToDisplay);
+        })
+
+        // delete specific item from server 
+        app.delete('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await inventoryCollection.deleteOne(query);
+            res.send(result);
         })
 
     }
