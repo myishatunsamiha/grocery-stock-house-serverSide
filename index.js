@@ -53,6 +53,17 @@ async function run() {
             res.send(result);
         })
 
+        // my items page: get only items which i have added
+        app.get('/myitems', async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+            const query = { email };
+            console.log(query);
+            const cursor = inventoryCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
 
         // add item page: inserting a new item in the database
         app.post('/additem', async (req, res) => {
